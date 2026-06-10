@@ -1,9 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Cryptography.X509Certificates;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 namespace Infrastructure.Data;
 
 public class ProductRepository(StoreContext context) : IProductRepository
@@ -39,7 +36,6 @@ public class ProductRepository(StoreContext context) : IProductRepository
     public async Task<IReadOnlyList<Product>> GetProductsAsync(string? brand, string? type, string? sort)
     {
         var query = context.Products.AsQueryable();
-
         if (!string.IsNullOrWhiteSpace(brand))
             query = query.Where(x => x.Brand == brand);
         if (!string.IsNullOrWhiteSpace(type))
