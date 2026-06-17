@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import 'zone.js'
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
 
 export const appConfig: ApplicationConfig = {
@@ -10,6 +11,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     // provideZoneChangeDetection(),
-    provideHttpClient()
+    provideHttpClient(),
   ]
 };
