@@ -8,7 +8,8 @@ import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
-import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list'; 
+import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
+import { ShopParams } from '../../shared/models/shopParams';
 
 @Component({
   selector: 'app-shop',
@@ -29,14 +30,13 @@ export class ShopComponent implements OnInit {
   private shopService = inject(ShopService);
   private dialogService = inject(MatDialog);
   products = signal<Product[]>([]);
-  selectedBrands = signal<string[]>([]);
-  selectedTypes = signal<string[]>([]);
-  selectedSort: string = 'name';
   sortOptions = [
     { name: 'Alphabettical', value: 'name' },
     { name: 'Price: Low-High', value: 'priceAsc' },
     { name: 'Price: High-low', value: 'PriceDesc' },
   ];
+
+  shopParams = new ShopParams();
 
   ngOnInit(): void {
     this.initializeShop();
@@ -45,17 +45,21 @@ export class ShopComponent implements OnInit {
   private initializeShop() {
     this.shopService.getBrands();
     this.shopService.getTypes();
-    this.shopService.getProducts().subscribe({
+    this.getProducts();
+  }
+
+  getProducts() {
+    this.shopService.getProducts(this.shopParams).subscribe({
       next: (response) => this.products.set(response.data),
       error: (error) => console.log(error),
     });
   }
 
-  onSortChange(event: MatSelectionListChange){
+  onSortChange(event: MatSelectionListChange) {
     const selectedOption = event.options[0];
-    if (selectedOption){
-      this.selectedSort = selectedOption.value;
-      console.log(this.selectedSort)
+    if (selectedOption) {
+      this.shopParams.sort = selectedOption.value;
+      this.getProducts();
     }
   }
 
@@ -63,20 +67,17 @@ export class ShopComponent implements OnInit {
     const dialogRef = this.dialogService.open(FilterDialogComponent, {
       minWidth: '500px',
       data: {
-        selectedBrands: this.selectedBrands(),
-        selectedTypes: this.selectedTypes(),
+        selectedBrands: this.shopParams.brands,
+        selectedTypes: this.shopParams.types,
       },
     });
     dialogRef.afterClosed().subscribe({
       next: (result) => {
         if (result) {
-          this.selectedBrands.set(result.selectedBrands);
-          this.selectedTypes.set(result.selectedTypes);
+          this.shopParams.brands = result.selectedBrands;
+          this.shopParams.types = result.selectedTypes;
           // apply filters
-          this.shopService.getProducts(this.selectedBrands(), this.selectedTypes()).subscribe({
-            next: (response) => this.products.set(response.data),
-           error: (error) => console.log(error),
-          });
+          this.getProducts();
         }
       },
     });

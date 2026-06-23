@@ -1,6 +1,8 @@
-﻿using Core.Entities;
+﻿using System.ClientModel.Primitives;
+using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 namespace Infrastructure.Data;
 
 public class ProductRepository(StoreContext context) : IProductRepository
@@ -65,5 +67,4 @@ public class ProductRepository(StoreContext context) : IProductRepository
     {
         context.Entry(product).State = EntityState.Modified;
     }
-
 }
