@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using API.DTOs;
-using Core.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -29,7 +26,7 @@ public class BuggyController : BaseApiController
     {
         throw new Exception("This is a test exception");
     }
-[HttpPost("validationerror")]
+    [HttpPost("validationerror")]
     public IActionResult GetValidationError(CreateProductDto  product)
     {
         return Ok();

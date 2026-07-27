@@ -1,11 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Product } from '../../shared/models/product';
 import { ShopService } from '../../core/services/shop.service';
-import { MatCard } from '@angular/material/card';
 import { ProductItemComponent } from './product-item/product-item.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
@@ -40,6 +39,11 @@ export class ShopComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeShop();
+  }
+
+  onSearchChange(){
+    this.shopParams.pageNumber =1;
+    this.getProducts();  
   }
 
   private initializeShop() {
